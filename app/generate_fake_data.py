@@ -1,26 +1,42 @@
 import random
 import datetime
+from faker import Faker
+fake = Faker('en_US')
+Faker.seed(0)
 
 def generateFakeData(count = 1000, deviceCount = 10):
   devices = createDevices(deviceCount)
-  sensors = ['flow', 'temperature', 'sound', 'humidity']
+  sensors = [
+    { 'name': 'temperatura', 'lower': 0, 'upper': 100 },
+    { 'name': 'vibracao', 'lower': 0, 'upper': 1 },
+    { 'name': 'rotacao', 'lower': 0, 'upper': 1 }
+  ]
   data = []
-  id = 0
-  while id < count:
-    data.append(read(devices, sensors))
-    id += 1
+  i = 0
+  while i < count:
+    data.append(createRandomData(devices, sensors))
+    i += 1
   return data
 
 def createDevices(count):
-  return list(map(lambda n: f'device {n}', list(range(1, count + 1))))
+  return list(map(lambda n: f'caixa {n}', list(range(1, count + 1))))
 
-def read(devices, sensors):
-  return {
-      'device': random.choice(devices),
-      'sensor': random.choice(sensors),
-      'value': random.randint(50, 400),
-      'time': nowUtc()
+def createRandomData(devices, sensors):
+  (latitude, longitude, rua, pais, continente) = fake.local_latlng()
+  data = {
+      'caixa': random.choice(devices),
+      'dataHora': nowUtc(),
+      'posicao': {
+        'latitude': latitude,
+        'longitude': longitude,
+        'rua': rua,
+        'pais': pais,
+        'continente': continente
+      }
   }
+  for sensor in sensors:
+    data[sensor['name']] = random.randint(sensor['lower'], sensor['upper'])
+  return data
 
 def nowUtc():
   return datetime.datetime.now(datetime.timezone.utc).strftime("%m/%d/%Y, %H:%M:%S:%f")

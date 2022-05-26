@@ -1,0 +1,31 @@
+[
+    {
+        "id": "d1a82fe5ff340d0b",
+        "type": "inject",
+        "z": "f6f2187d.f17ca8",
+        "name": "Run",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "true",
+        "payloadType": "bool",
+        "x": 490,
+        "y": 360,
+        "wires": [
+            [
+                "9f836d97a5ed35c8"
+            ]
+        ]
+    }
+]
