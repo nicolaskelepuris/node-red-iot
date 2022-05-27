@@ -99,7 +99,7 @@
         "type": "function",
         "z": "f6f2187d.f17ca8",
         "name": "filtra caixas com transporte problematico",
-        "func": "const result = []\nconst boxes = msg.payload\nfor (const boxName in boxes) {\n    const box = boxes[boxName]\n    if (Math.abs(box.temperatura > 3) || box.vibracao > 55 || box.rotacao > 55)\n    {\n        result.push(box)\n    }\n}\nreturn { 'payload': { 'payload': result } };",
+        "func": "const result = []\nconst boxes = msg.payload\nfor (const boxName in boxes) {\n    const box = boxes[boxName]\n    if (Math.abs(box.variacaoTemperatura > 3) || box.vibracao > 55 || box.rotacao > 55)\n    {\n        result.push(box)\n    }\n}\nreturn { 'payload': { 'payload': result } };",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
