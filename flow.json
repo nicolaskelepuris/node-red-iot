@@ -49,7 +49,7 @@
         "id": "d1a82fe5ff340d0b",
         "type": "inject",
         "z": "f6f2187d.f17ca8",
-        "name": "Run every 2 sec",
+        "name": "Run every 15 sec",
         "props": [
             {
                 "p": "payload"
@@ -59,7 +59,7 @@
                 "vt": "str"
             }
         ],
-        "repeat": "2",
+        "repeat": "15",
         "crontab": "",
         "once": false,
         "onceDelay": "2",
