@@ -1,9 +1,55 @@
 [
     {
+        "id": "f6f2187d.f17ca8",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "9f836d97a5ed35c8",
+        "type": "http request",
+        "z": "f6f2187d.f17ca8",
+        "name": "busca dados do sensor",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.0.107:80/generate-fake-data",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 390,
+        "y": 280,
+        "wires": [
+            [
+                "9664e74af44cdf87"
+            ]
+        ]
+    },
+    {
+        "id": "9b98570772c6d5fe",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1370,
+        "y": 360,
+        "wires": []
+    },
+    {
         "id": "d1a82fe5ff340d0b",
         "type": "inject",
         "z": "f6f2187d.f17ca8",
-        "name": "Run",
+        "name": "Run every 2 sec",
         "props": [
             {
                 "p": "payload"
@@ -13,19 +59,113 @@
                 "vt": "str"
             }
         ],
-        "repeat": "",
+        "repeat": "2",
         "crontab": "",
         "once": false,
-        "onceDelay": 0.1,
+        "onceDelay": "2",
         "topic": "",
         "payload": "true",
         "payloadType": "bool",
-        "x": 490,
-        "y": 360,
+        "x": 170,
+        "y": 200,
         "wires": [
             [
                 "9f836d97a5ed35c8"
             ]
         ]
+    },
+    {
+        "id": "9664e74af44cdf87",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "processa o payload",
+        "func": "var result = {}\nArray(msg.payload)[0].payload.forEach(element => {\n    if (!result[element.caixa]){\n        result[element.caixa] = element\n    } else {\n        const resultItem = result[element.caixa]\n        resultItem.variacaoTemperatura = element.variacaoTemperatura + result[element.caixa].variacaoTemperatura\n        resultItem.vibracao = element.vibracao + result[element.caixa].vibracao\n        resultItem.rotacao = element.rotacao + result[element.caixa].rotacao\n        resultItem.posicao = element.posicao\n    }\n})\n\nreturn { payload: result };",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 590,
+        "y": 360,
+        "wires": [
+            [
+                "9b98570772c6d5fe",
+                "14a69edb6df20937"
+            ]
+        ]
+    },
+    {
+        "id": "14a69edb6df20937",
+        "type": "function",
+        "z": "f6f2187d.f17ca8",
+        "name": "filtra caixas com transporte problematico",
+        "func": "const result = []\nconst boxes = msg.payload\nfor (const boxName in boxes) {\n    const box = boxes[boxName]\n    if (Math.abs(box.temperatura > 3) || box.vibracao > 55 || box.rotacao > 55)\n    {\n        result.push(box)\n    }\n}\nreturn { 'payload': { 'payload': result } };",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 440,
+        "wires": [
+            [
+                "a0760eceb9502958",
+                "d9e9f8c598caade5"
+            ]
+        ]
+    },
+    {
+        "id": "a0760eceb9502958",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1370,
+        "y": 440,
+        "wires": []
+    },
+    {
+        "id": "d9e9f8c598caade5",
+        "type": "http request",
+        "z": "f6f2187d.f17ca8",
+        "name": "notifica sobre caixas afetadas",
+        "method": "POST",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://192.168.0.107:80/notify",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "authType": "",
+        "senderr": false,
+        "x": 1110,
+        "y": 520,
+        "wires": [
+            [
+                "d5dda4f112673d27"
+            ]
+        ]
+    },
+    {
+        "id": "d5dda4f112673d27",
+        "type": "debug",
+        "z": "f6f2187d.f17ca8",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1370,
+        "y": 520,
+        "wires": []
     }
 ]

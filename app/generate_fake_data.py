@@ -7,7 +7,7 @@ Faker.seed(0)
 def generateFakeData(count = 1000, deviceCount = 10):
   devices = createDevices(deviceCount)
   sensors = [
-    { 'name': 'temperatura', 'lower': 0, 'upper': 100 },
+    { 'name': 'variacaoTemperatura', 'lower': -1, 'upper': 1 },
     { 'name': 'vibracao', 'lower': 0, 'upper': 1 },
     { 'name': 'rotacao', 'lower': 0, 'upper': 1 }
   ]
