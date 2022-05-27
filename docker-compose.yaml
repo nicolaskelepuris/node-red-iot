@@ -1,5 +1,5 @@
 services:
-  fake-data-api:
+  api:
     build: .
     volumes:
       - ./app:/code/app
